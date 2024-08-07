@@ -90,3 +90,6 @@ def cargar_personajes():
             Personaje.lista_personajes.append(p)
         
         url_api = datos.get('next')
+
+if __name__ == "__main__":
+    cargar_personajes()
