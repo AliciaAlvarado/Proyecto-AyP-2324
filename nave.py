@@ -49,7 +49,7 @@ def cargar_naves():
         respuesta = requests.get(url_api)
         datos = respuesta.json()
         for nave in datos['results']:
-            detalles_respuesta = rnave['url'])
+            detalles_respuesta = requests.get(nave['url'])
             detalles = detalles_respuesta.json()['result']['properties']
 
             n = Nave(
