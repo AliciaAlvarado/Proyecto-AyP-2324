@@ -83,3 +83,6 @@ def cargar_especies():
             Especie.lista_especies.append(e)
         
         url_api = datos.get('next')
+
+if __name__ == "__main__":
+    cargar_especies()
