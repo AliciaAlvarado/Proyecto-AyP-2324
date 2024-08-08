@@ -4,6 +4,7 @@ from planeta import cargar_planetas, Planeta
 from nave import cargar_naves, Nave
 from vehiculo import cargar_vehiculos, Vehiculo
 from especie import cargar_especies, Especie
+from listados import listar_peliculas, listar_especies, listar_planetas, buscar_personaje
 
 def menu_principal():
     while True:
@@ -17,6 +18,29 @@ def menu_principal():
 
         seleccion = input("-----> ")
         
+def menu_listados():
+    while True:
+        print("\nSeleccione que desea hacer:")
+        print("1. Ver el listado de Películas")
+        print("2. Ver el listado de Especies")
+        print("3. Ver el listado de Planetas")
+        print("4. Buscar un personaje por su nombre")
+        print("5. Volver al menú principal")
+
+        seleccion = input("-----> ")
+
+        if seleccion == "1":
+            listar_peliculas()
+        elif seleccion == "2":
+            listar_especies()
+        elif seleccion == "3":
+            listar_planetas()
+        elif seleccion == "4":
+            buscar_personaje()
+        elif seleccion == "5":
+            break
+        else:
+            print("ERROR - Seleccion invalida, por favor intente de nuevo")
 
 cargar_peliculas()
 print('Películas cargadas')
@@ -33,3 +57,4 @@ print('Especies cargadas')
 
 
 print('success')
+menu_principal()
