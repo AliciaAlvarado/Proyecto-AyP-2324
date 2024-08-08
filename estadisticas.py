@@ -60,3 +60,41 @@ def grafico_caracteristicas_naves():
     if df.empty:
         print("No hay datos disponibles para mostrar el gráfico.")
         return
+    
+    plt.figure(figsize=(10, 6))
+
+    # Gráfico de Longitud
+    plt.subplot(2, 2, 1)
+    df.plot(x='Nombre', y='Longitud', kind='bar', ax=plt.gca(), title='Longitud de las naves')
+
+    # Gráfico de Capacidad de Carga
+    plt.subplot(2, 2, 2)
+    df.plot(x='Nombre', y='Capacidad de Carga', kind='bar', ax=plt.gca(), title='Capacidad de Carga')
+
+    # Gráfico de Clasificación de Hiperimpulsor
+    plt.subplot(2, 2, 3)
+    df.plot(x='Nombre', y='Clasificación de Hiperimpulsor', kind='bar', ax=plt.gca(), title='Clasificación de Hiperimpulsor')
+
+    # Gráfico de MGLT
+    plt.subplot(2, 2, 4)
+    df.plot(x='Nombre', y='MGLT', kind='bar', ax=plt.gca(), title='MGLT')
+    
+    plt.tight_layout()
+    plt.show()
+
+def estadisticas_naves():
+    print("\nSeleccione la clase de nave para ver estadísticas:")
+    clases_naves = list(set([nave.clase for nave in Nave.lista_naves]))
+    for i, clase in enumerate(clases_naves):
+        print(f"{i + 1}. {clase}")
+    
+    while True:
+        try:
+            seleccion = int(input("Ingrese el número correspondiente a la clase de nave: "))
+            if 1 <= seleccion <= len(clases_naves):
+                clase_seleccionada = clases_naves[seleccion - 1]
+                break
+            else:
+                print("Selección no válida. Por favor, intente de nuevo.")
+        except ValueError:
+            print("Entrada no válida. Por favor, ingrese un número.")
