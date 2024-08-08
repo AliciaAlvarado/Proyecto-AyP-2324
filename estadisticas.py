@@ -98,3 +98,30 @@ def estadisticas_naves():
                 print("Selección no válida. Por favor, intente de nuevo.")
         except ValueError:
             print("Entrada no válida. Por favor, ingrese un número.")
+    
+    naves_filtradas = [nave for nave in Nave.lista_naves if nave.clase == clase_seleccionada]
+
+    if not naves_filtradas:
+        print("No se encontraron naves para la clase seleccionada.")
+        return
+
+    # Imprimir el nombre de la clase de la nave seleccionada
+    print(f"\nEstadísticas para la clase de nave: {clase_seleccionada}\n")
+
+    data = {
+        "Nombre": [nave.nombre for nave in naves_filtradas],
+        "Longitud": [float(nave.longitud.replace(',', '')) if nave.longitud.replace(',', '').isdigit() else 0 for nave in naves_filtradas],
+        "Capacidad de Carga": [int(nave.capacidad_carga.replace(',', '')) if nave.capacidad_carga.replace(',', '').isdigit() else 0 for nave in naves_filtradas],
+        "Clasificación de Hiperimpulsor": [float(nave.hiperimpulsor) if nave.hiperimpulsor.replace('.', '', 1).isdigit() else 0 for nave in naves_filtradas],
+        "MGLT": [int(nave.mglt) if nave.mglt.isdigit() else 0 for nave in naves_filtradas],
+        "Velocidad Máxima en Atmósfera": [int(nave.velocidad_atmosfera.replace(',', '')) if nave.velocidad_atmosfera.replace(',', '').isdigit() else 0 for nave in naves_filtradas],
+        "Costo en Créditos": [int(nave.costo_creditos.replace(',', '')) if nave.costo_creditos.replace(',', '').isdigit() else 0 for nave in naves_filtradas]
+    }
+
+    df = pd.DataFrame(data)
+
+    if df.empty:
+        print("No hay datos disponibles para mostrar las estadísticas.")
+        return
+
+    print(df.describe().T)
