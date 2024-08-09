@@ -5,6 +5,7 @@ from nave import cargar_naves, Nave
 from vehiculo import cargar_vehiculos, Vehiculo
 from especie import cargar_especies, Especie
 from listados import listar_peliculas, listar_especies, listar_planetas, buscar_personaje
+from estadisticas import grafico_personajes_por_planeta, grafico_caracteristicas_naves, estadisticas_naves
 
 def menu_principal():
     while True:
@@ -17,6 +18,18 @@ def menu_principal():
         print("4. Salir de la aplicacion ")
 
         seleccion = input("-----> ")
+
+        if seleccion == "1":
+            menu_listados()
+        elif seleccion == "2":
+            menu_estadisticas()
+        elif seleccion == "3":
+            menu_misiones()
+        elif seleccion == "4":
+            print("Hasta pronto.")
+            break
+        else:
+            print("ERROR - Seleccion invalida, por favor intente de nuevo")
         
 def menu_listados():
     while True:
@@ -41,6 +54,28 @@ def menu_listados():
             break
         else:
             print("ERROR - Seleccion invalida, por favor intente de nuevo")
+
+def menu_estadisticas():
+    while True:
+        print("\nSeleccione una opción del submenú de Estadísticas:")
+        print("1. Gráfico de cantidad de personajes por planeta")
+        print("2. Gráficos de características de naves")
+        print("3. Estadísticas sobre naves")
+        print("4. Volver al menú principal")
+
+        seleccion = input("-----> ")
+
+        if seleccion == "1":
+            grafico_personajes_por_planeta()
+        elif seleccion == "2":
+            grafico_caracteristicas_naves()
+        elif seleccion == "3":
+            estadisticas_naves()
+        elif seleccion == "4":
+            break
+        else:
+            print("ERROR - Seleccion invalida, por favor intente de nuevo")
+
 
 cargar_peliculas()
 print('Películas cargadas')
