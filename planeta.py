@@ -1,40 +1,36 @@
 import requests
+import csv
+import os
 
 class Planeta:
     lista_planetas = []
 
-    def __init__(self, nombre, diametro, periodo_rotacion, periodo_orbita, gravedad, poblacion, clima, terreno, agua_superficial, residentes, peliculas, url, creado, editado):
+    def __init__(self, nombre, clima, diametro, gravedad, periodo_orbital, poblacion, periodo_rotacion, terreno, agua_superficial, url, creado, editado, residentes, peliculas):
         self.nombre = nombre
-        self.diametro = diametro
-        self.periodo_rotacion = periodo_rotacion
-        self.periodo_orbita = periodo_orbita
-        self.gravedad = gravedad
-        self.poblacion = poblacion
         self.clima = clima
+        self.diametro = diametro
+        self.gravedad = gravedad
+        self.periodo_orbital = periodo_orbital
+        self.poblacion = poblacion
+        self.periodo_rotacion = periodo_rotacion
         self.terreno = terreno
         self.agua_superficial = agua_superficial
-        self.residentes = residentes
-        self.peliculas = peliculas
         self.url = url
         self.creado = creado
         self.editado = editado
-
-    @property
-    def habitantes(self):
-        return self.poblacion
+        self.residentes = []
+        self.peliculas = []
 
     def __repr__(self):
         return (f"Nombre: {self.nombre}\n"
-                f"Diámetro: {self.diametro}\n"
-                f"Periodo de rotación: {self.periodo_rotacion}\n"
-                f"Periodo de órbita: {self.periodo_orbita}\n"
-                f"Gravedad: {self.gravedad}\n"
-                f"Población: {self.poblacion}\n"
                 f"Clima: {self.clima}\n"
+                f"Diámetro: {self.diametro}\n"
+                f"Gravedad: {self.gravedad}\n"
+                f"Periodo Orbital: {self.periodo_orbital}\n"
+                f"Población: {self.poblacion}\n"
+                f"Periodo de Rotación: {self.periodo_rotacion}\n"
                 f"Terreno: {self.terreno}\n"
-                f"Agua superficial: {self.agua_superficial}\n"
-                f"Residentes: {', '.join(self.residentes)}\n"
-                f"Películas: {', '.join(self.peliculas)}\n"
+                f"Agua Superficial: {self.agua_superficial}\n"
                 f"URL: {self.url}\n"
                 f"Creado: {self.creado}\n"
                 f"Editado: {self.editado}\n")
@@ -49,6 +45,7 @@ def cargar_nombres_de_urls(urls):
     return nombres
 
 def cargar_planetas():
+    Planeta.lista_planetas = []
     url_api = "https://www.swapi.tech/api/planets"
     while url_api:
         respuesta = requests.get(url_api)
@@ -56,26 +53,59 @@ def cargar_planetas():
         for planeta in datos['results']:
             detalles_respuesta = requests.get(planeta['url'])
             detalles = detalles_respuesta.json()['result']['properties']
-            
             p = Planeta(
                 nombre=detalles['name'],
-                diametro=detalles['diameter'],
-                periodo_rotacion=detalles['rotation_period'],
-                periodo_orbita=detalles['orbital_period'],
-                gravedad=detalles['gravity'],
-                poblacion=detalles['population'],
                 clima=detalles['climate'],
+                diametro=detalles['diameter'],
+                gravedad=detalles['gravity'],
+                periodo_orbital=detalles['orbital_period'],
+                poblacion=detalles['population'],
+                periodo_rotacion=detalles['rotation_period'],
                 terreno=detalles['terrain'],
                 agua_superficial=detalles['surface_water'],
-                residentes=cargar_nombres_de_urls(detalles['residents']) if 'residents' in detalles else [],
-                peliculas=cargar_nombres_de_urls(detalles['films']) if 'films' in detalles else [],
                 url=detalles['url'],
                 creado=detalles['created'],
-                editado=detalles['edited']
+                editado=detalles['edited'],
+                residentes=[],
+                peliculas = []
             )
             Planeta.lista_planetas.append(p)
         
         url_api = datos.get('next')
 
+def cargar_planetas_desde_csv():
+    Planeta.lista_planetas = []
+    ruta_csv = os.path.join(os.path.dirname(__file__), 'csv', 'planets.csv')
+    with open(ruta_csv, mode='r', encoding='utf-8') as archivo:
+        lector_csv = csv.DictReader(archivo)
+        for fila in lector_csv:
+            p = Planeta(
+                nombre=fila['name'],
+                clima=fila['climate'],
+                diametro=fila['diameter'],
+                gravedad=fila['gravity'],
+                periodo_orbital=fila['orbital_period'],
+                poblacion=fila['population'],
+                periodo_rotacion=fila['rotation_period'],
+                terreno=fila['terrain'],
+                agua_superficial=fila['surface_water'],
+                residentes=fila['residents'].split(';') if fila['residents'] else [],
+                peliculas=fila['films'].split(';') if fila['films'] else [],
+                url=None,
+                creado=None,
+                editado=None
+            )
+            Planeta.lista_planetas.append(p)
+    
+    print('Planetas cargados del CSV exitosamente')
+
 if __name__ == "__main__":
-    cargar_planetas()
+    # Para cargar desde la API
+    # cargar_planetas()
+    
+    # Para cargar desde el CSV
+    cargar_planetas_desde_csv()
+    
+    # Imprimir planetas cargados
+    for planeta in Planeta.lista_planetas:
+        print(planeta)
