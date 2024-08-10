@@ -1,4 +1,6 @@
 import requests
+import csv
+import os
 
 class Personaje:
     lista_personajes = []
@@ -53,6 +55,7 @@ def cargar_nombres_de_urls(urls):
     return nombres
 
 def cargar_personajes():
+    Personaje.lista_personajes = []
     url_api = "https://www.swapi.tech/api/people"
     while url_api:
         respuesta = requests.get(url_api)
@@ -61,14 +64,6 @@ def cargar_personajes():
             detalles_respuesta = requests.get(personaje['url'])
             detalles = detalles_respuesta.json()['result']['properties']
             
-            planeta_origen = None
-            if detalles['homeworld']:
-                planeta_respuesta = requests.get(detalles['homeworld'])
-                planeta_origen = planeta_respuesta.json()['result']['properties']['name']
-
-            especies = cargar_nombres_de_urls(detalles['species']) if 'species' in detalles else ["Desconocido"]
-            especie = especies[0] if especies else "Desconocido"
-
             p = Personaje(
                 nombre=detalles['name'],
                 nacimiento=detalles['birth_year'],
@@ -78,18 +73,53 @@ def cargar_personajes():
                 altura=detalles['height'],
                 peso=detalles['mass'],
                 color_piel=detalles['skin_color'],
-                planeta_origen=planeta_origen,
-                peliculas=cargar_nombres_de_urls(detalles['films']) if 'films' in detalles else [],
-                naves=cargar_nombres_de_urls(detalles['starships']) if 'starships' in detalles else [],
-                vehiculos=cargar_nombres_de_urls(detalles['vehicles']) if 'vehicles' in detalles else [],
-                especie=especie,
-                url=detalles['url'],
-                creado=detalles['created'],
-                editado=detalles['edited']
+                planeta_origen= detalles['homeworld'],
+                peliculas=[],
+                naves=[],
+                vehiculos=[],
+                especie=[],
+                url=personaje['url'],
+                creado=None,
+                editado=None
             )
             Personaje.lista_personajes.append(p)
         
         url_api = datos.get('next')
 
+def cargar_personajes_desde_csv():
+    Personaje.lista_personajes = []
+    ruta_csv = os.path.join(os.path.dirname(__file__), 'csv', 'characters.csv')
+    with open(ruta_csv, mode='r', encoding='utf-8') as archivo:
+        lector_csv = csv.DictReader(archivo)
+        for fila in lector_csv:
+            p = Personaje(
+                nombre=fila['name'],
+                nacimiento=fila['year_born'],
+                color_ojos=fila['eye_color'],
+                genero=fila['gender'],
+                color_cabello=fila['hair_color'],
+                altura=fila['height'],
+                peso=fila['weight'],
+                color_piel=fila['skin_color'],
+                planeta_origen=fila['homeworld'],
+                peliculas=None,
+                naves=None,
+                vehiculos=None,
+                especie=None,
+                url=None,
+                creado=None,
+                editado=None
+            )
+            Personaje.lista_personajes.append(p)
+    print('Personajes cargados exitosamente desde el csv')
+
 if __name__ == "__main__":
-    cargar_personajes()
+    # Para cargar desde la API
+    # cargar_personajes()
+    
+    # Para cargar desde el CSV
+    cargar_personajes_desde_csv()
+    
+    # Imprimir personajes cargados
+    for personaje in Personaje.lista_personajes:
+        print(personaje)
