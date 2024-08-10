@@ -15,10 +15,10 @@ class Especie:
         self.lengua = lengua
         self.planeta_origen = planeta_origen
         self.personajes = personajes
-        self.peliculas = peliculas
         self.url = url
         self.creado = creado
         self.editado = editado
+        self.peliculas = []
 
     @property
     def episodios(self):
@@ -58,24 +58,19 @@ def cargar_especies():
         for especie in datos['results']:
             detalles_respuesta = requests.get(especie['url'])
             detalles = detalles_respuesta.json()['result']['properties']
-            planeta_origen = None
-            if detalles['homeworld']:
-                planeta_respuesta = requests.get(detalles['homeworld'])
-                planeta_origen = planeta_respuesta.json()['result']['properties']['name']
-            
+           
             e = Especie(
                 nombre=detalles['name'],
                 clasificacion=detalles['classification'],
                 designacion=detalles['designation'],
                 altura=detalles['average_height'],
                 esperanza_vida=detalles['average_lifespan'],
-                colores_ojos=detalles['eye_colors'].split(', '),
-                colores_cabello=detalles['hair_colors'].split(', '),
-                colores_piel=detalles['skin_colors'].split(', '),
+                colores_ojos=detalles['eye_colors'],
+                colores_cabello=detalles['hair_colors'],
+                colores_piel=detalles['skin_colors'],
                 lengua=detalles['language'],
-                planeta_origen=planeta_origen,
-                personajes=cargar_nombres_de_urls(detalles['people']),
-                peliculas=cargar_nombres_de_urls(detalles['films']) if 'films' in detalles else [],
+                planeta_origen=detalles['homeworld'],
+                personajes=detalles['people'],
                 url=detalles['url'],
                 creado=detalles['created'],
                 editado=detalles['edited']
