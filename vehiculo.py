@@ -45,18 +45,19 @@ def cargar_vehiculos():
                 modelo=detalles['model'],
                 clase=detalles['vehicle_class'],
                 fabricante=detalles['manufacturer'],
-                longitud=int(detalles['length'].replace(',', '')) if detalles['length'].replace(',', '').isdigit() else 0,
-                costo=int(detalles['cost_in_credits']) if detalles['cost_in_credits'].isdigit() else 0,
+                longitud=detalles['length'],
+                costo=detalles['cost_in_credits'],
                 tripulacion=detalles['crew'],
                 pasajeros=detalles['passengers'],
                 velocidad_maxima=detalles['max_atmosphering_speed'],
                 capacidad_carga=detalles['cargo_capacity'],
                 consumibles=detalles['consumables'],
-                peliculas=cargar_nombres_de_urls(detalles['films']) if 'films' in detalles else [],
-                pilotos=cargar_nombres_de_urls(detalles['pilots']) if 'pilots' in detalles else [],
+                peliculas=detalles['films'],
+                pilotos=detalles['pilots'],
                 url=detalles['url'],
                 creado=detalles['created'],
                 editado=detalles['edited']
             )
             Vehiculo.lista_vehiculos.append(p)
         url_api = datos['next']
+
