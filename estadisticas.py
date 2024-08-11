@@ -47,12 +47,18 @@ def grafico_caracteristicas_naves():
         print("No se encontraron naves para la clase seleccionada.")
         return
 
+    def safe_convert(value, conversion_func, default=0):
+        try:
+            return conversion_func(value.replace(',', '').replace('unknown', '')) if value else default
+        except ValueError:
+            return default
+
     data = {
         "Nombre": [nave.nombre for nave in naves_filtradas],
-        "Longitud": [float(nave.longitud.replace(',', '')) if nave.longitud.replace(',', '').isdigit() else 0 for nave in naves_filtradas],
-        "Capacidad de Carga": [int(nave.capacidad_carga.replace(',', '')) if nave.capacidad_carga.replace(',', '').isdigit() else 0 for nave in naves_filtradas],
-        "Clasificación de Hiperimpulsor": [float(nave.hiperimpulsor) if nave.hiperimpulsor.replace('.', '', 1).isdigit() else 0 for nave in naves_filtradas],
-        "MGLT": [int(nave.mglt) if nave.mglt.isdigit() else 0 for nave in naves_filtradas]
+        "Longitud": [safe_convert(nave.longitud, float) for nave in naves_filtradas],
+        "Capacidad de Carga": [safe_convert(nave.capacidad_carga, float) for nave in naves_filtradas],
+        "Clasificación de Hiperimpulsor": [safe_convert(nave.hiperimpulsor, float) for nave in naves_filtradas],
+        "MGLT": [safe_convert(nave.MGLT, int) for nave in naves_filtradas]
     }
 
     df = pd.DataFrame(data)
@@ -60,29 +66,39 @@ def grafico_caracteristicas_naves():
     if df.empty:
         print("No hay datos disponibles para mostrar el gráfico.")
         return
-    
-    plt.figure(figsize=(10, 6))
 
-    # Gráfico de Longitud
-    plt.subplot(2, 2, 1)
-    df.plot(x='Nombre', y='Longitud', kind='bar', ax=plt.gca(), title='Longitud de las naves')
+    # Eliminamos columnas con todos los valores cero
+    df = df.loc[:, (df != 0).any(axis=0)]
 
-    # Gráfico de Capacidad de Carga
-    plt.subplot(2, 2, 2)
-    df.plot(x='Nombre', y='Capacidad de Carga', kind='bar', ax=plt.gca(), title='Capacidad de Carga')
+    # Verificamos si hay datos en cada columna antes de graficar
+    fig, axs = plt.subplots(2, 2, figsize=(12, 8))
 
-    # Gráfico de Clasificación de Hiperimpulsor
-    plt.subplot(2, 2, 3)
-    df.plot(x='Nombre', y='Clasificación de Hiperimpulsor', kind='bar', ax=plt.gca(), title='Clasificación de Hiperimpulsor')
+    plot_idx = 0
+    column_titles = {
+        'Longitud': 'Longitud de las naves',
+        'Capacidad de Carga': 'Capacidad de Carga',
+        'Clasificación de Hiperimpulsor': 'Clasificación de Hiperimpulsor',
+        'MGLT': 'MGLT'
+    }
 
-    # Gráfico de MGLT
-    plt.subplot(2, 2, 4)
-    df.plot(x='Nombre', y='MGLT', kind='bar', ax=plt.gca(), title='MGLT')
-    
+    for column in ['Longitud', 'Capacidad de Carga', 'Clasificación de Hiperimpulsor', 'MGLT']:
+        if column in df.columns:
+            ax = axs[plot_idx // 2, plot_idx % 2]
+            df.plot(x='Nombre', y=column, kind='bar', ax=ax)
+            ax.set_title(column_titles[column])
+            ax.set_xlabel('')
+            ax.tick_params(axis='x', rotation=45)
+            plot_idx += 1
+        else:
+            axs[plot_idx // 2, plot_idx % 2].axis('off')
+            plot_idx += 1
+
     plt.tight_layout()
     plt.show()
 
 def estadisticas_naves():
+    for nave in Nave.lista_naves:
+        print(nave.__repr__)
     print("\nSeleccione la clase de nave para ver estadísticas:")
     clases_naves = list(set([nave.clase for nave in Nave.lista_naves]))
     for i, clase in enumerate(clases_naves):
@@ -98,24 +114,29 @@ def estadisticas_naves():
                 print("Selección no válida. Por favor, intente de nuevo.")
         except ValueError:
             print("Entrada no válida. Por favor, ingrese un número.")
-    
+
     naves_filtradas = [nave for nave in Nave.lista_naves if nave.clase == clase_seleccionada]
 
     if not naves_filtradas:
         print("No se encontraron naves para la clase seleccionada.")
         return
 
-    # Imprimir el nombre de la clase de la nave seleccionada
     print(f"\nEstadísticas para la clase de nave: {clase_seleccionada}\n")
+
+    def safe_convert(value, conversion_func, default=None):
+        try:
+            return conversion_func(value.replace(',', '').replace('unknown', '')) if value else default
+        except ValueError:
+            return default
 
     data = {
         "Nombre": [nave.nombre for nave in naves_filtradas],
-        "Longitud": [float(nave.longitud.replace(',', '')) if nave.longitud.replace(',', '').isdigit() else 0 for nave in naves_filtradas],
-        "Capacidad de Carga": [int(nave.capacidad_carga.replace(',', '')) if nave.capacidad_carga.replace(',', '').isdigit() else 0 for nave in naves_filtradas],
-        "Clasificación de Hiperimpulsor": [float(nave.hiperimpulsor) if nave.hiperimpulsor.replace('.', '', 1).isdigit() else 0 for nave in naves_filtradas],
-        "MGLT": [int(nave.mglt) if nave.mglt.isdigit() else 0 for nave in naves_filtradas],
-        "Velocidad Máxima en Atmósfera": [int(nave.velocidad_atmosfera.replace(',', '')) if nave.velocidad_atmosfera.replace(',', '').isdigit() else 0 for nave in naves_filtradas],
-        "Costo en Créditos": [int(nave.costo_creditos.replace(',', '')) if nave.costo_creditos.replace(',', '').isdigit() else 0 for nave in naves_filtradas]
+        "Longitud": [safe_convert(nave.longitud, float) for nave in naves_filtradas],
+        "Capacidad de Carga": [safe_convert(nave.capacidad_carga, float) for nave in naves_filtradas],
+        "Clasificación de Hiperimpulsor": [safe_convert(nave.hiperimpulsor, float) for nave in naves_filtradas],
+        "MGLT": [safe_convert(nave.MGLT, int) for nave in naves_filtradas],
+        "Velocidad Máxima en Atmósfera": [safe_convert(nave.velocidad_maxima, float) for nave in naves_filtradas],
+        "Costo en Créditos": [safe_convert(nave.costo_en_creditos, float) for nave in naves_filtradas]
     }
 
     df = pd.DataFrame(data)
@@ -124,4 +145,9 @@ def estadisticas_naves():
         print("No hay datos disponibles para mostrar las estadísticas.")
         return
 
-    print(df.describe().T)
+    # Eliminamos columnas con todos los valores None
+    df = df.dropna(axis=1, how='all')
+
+    # Seleccionamos solo las estadísticas que queremos mostrar
+    stats = df.describe().T[['count', 'mean', 'std', 'min', 'max']]
+    print(stats)
