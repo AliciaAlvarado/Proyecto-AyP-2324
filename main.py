@@ -1,11 +1,12 @@
 from pelicula import cargar_peliculas, Pelicula
-from personaje import cargar_personajes, Personaje
-from planeta import cargar_planetas, Planeta
-from nave import cargar_naves, Nave
+from personaje import cargar_personajes, Personaje, cargar_personajes_desde_csv
+from planeta import cargar_planetas, Planeta, cargar_planetas_desde_csv
+from nave import cargar_naves, Nave, cargar_naves_desde_csv
+from arma import Arma, cargar_armas_desde_csv
 from vehiculo import cargar_vehiculos, Vehiculo
 from especie import cargar_especies, Especie
-from listados import listar_peliculas, listar_especies, listar_planetas, buscar_personaje
 from estadisticas import grafico_personajes_por_planeta, grafico_caracteristicas_naves, estadisticas_naves
+from listados import listar_peliculas, listar_especies, listar_planetas, buscar_personaje
 
 def menu_principal():
     while True:
@@ -32,6 +33,35 @@ def menu_principal():
             print("ERROR - Seleccion invalida, por favor intente de nuevo")
         
 def menu_listados():
+    cargar_peliculas()
+    print('Películas cargadas del api')
+    cargar_personajes()
+    print('Personajes cargados del api')
+    cargar_planetas()
+    print('Planetas cargados del api')
+    cargar_naves()
+    print('Naves cargadas del api')
+    cargar_vehiculos()
+    print('Vehículos cargados del api')
+    cargar_especies()
+    print('Especies cargadas del api')
+
+    ###########################################################################
+    print(Pelicula.lista_peliculas[0].__repr__())
+    print('')
+    print(Personaje.lista_personajes[0].__repr__())
+    print('')
+    print(Nave.lista_naves[0].__repr__())
+    print('')
+    print(Vehiculo.lista_vehiculos[0].__repr__())
+    print('')
+    print(Especie.lista_especies[0].__repr__())
+    print('')
+    print(Planeta.lista_planetas[0].__repr__())
+
+
+    ###########################################################################
+
     while True:
         print("\nSeleccione que desea hacer:")
         print("1. Ver el listado de Películas")
@@ -56,6 +86,11 @@ def menu_listados():
             print("ERROR - Seleccion invalida, por favor intente de nuevo")
 
 def menu_estadisticas():
+    cargar_armas_desde_csv()
+    cargar_naves_desde_csv()
+    cargar_planetas_desde_csv()
+    cargar_personajes_desde_csv()
+
     while True:
         print("\nSeleccione una opción del submenú de Estadísticas:")
         print("1. Gráfico de cantidad de personajes por planeta")
@@ -75,20 +110,6 @@ def menu_estadisticas():
             break
         else:
             print("ERROR - Seleccion invalida, por favor intente de nuevo")
-
-
-cargar_peliculas()
-print('Películas cargadas')
-cargar_personajes()
-print('Personajes cargados')
-cargar_planetas()
-print('Planetas cargados')
-cargar_naves()
-print('Naves cargadas')
-cargar_vehiculos()
-print('Vehículos cargados')
-cargar_especies()
-print('Especies cargadas')
 
 
 print('success')
