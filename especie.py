@@ -3,7 +3,7 @@ import requests
 class Especie:
     lista_especies = []
 
-    def __init__(self, nombre, clasificacion, designacion, altura, esperanza_vida, colores_ojos, colores_cabello, colores_piel, lengua, planeta_origen, personajes, peliculas, url, creado, editado):
+    def __init__(self, nombre, clasificacion, designacion, altura, esperanza_vida, colores_ojos, colores_cabello, colores_piel, lengua, planeta_origen, personajes, url, creado, editado):
         self.nombre = nombre
         self.clasificacion = clasificacion
         self.designacion = designacion
@@ -73,7 +73,8 @@ def cargar_especies():
                 personajes=detalles['people'],
                 url=detalles['url'],
                 creado=detalles['created'],
-                editado=detalles['edited']
+                editado=detalles['edited'],
+                peliculas = None
             )
             Especie.lista_especies.append(e)
         

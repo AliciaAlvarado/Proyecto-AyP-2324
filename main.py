@@ -12,7 +12,7 @@ import json
 
 def menu_principal():
     while True:
-        print("\nBienvenido a tu a el mundo de Star Wars!")
+        print("\nBienvenido a tu mundo de Star Wars!")
         print("\nQue la fuerza te acompañe!")
         print("Seleccione qué desea realizar:")
         print("1. Ver informacion de star wars")
