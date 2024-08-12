@@ -2,163 +2,157 @@ import pandas as pd
 from personaje import Personaje
 from planeta import Planeta
 from nave import Nave
+from arma import Arma
 
-misiones = []  # Lista global para almacenar las misiones
-armas_disponibles = [
-    "Bláster", 
-    "Sable de luz", 
-    "Detonador térmico", 
-    "Bowcaster", 
-    "Pistola de iones", 
-    "Rifle de francotirador", 
-    "Lanza misiles", 
-    "Cañón láser", 
-    "Arco energético", 
-    "Daga vibro", 
-    "Látigo de energía", 
-    "Granada de fragmentación"
-]
+# Lista global para almacenar las misiones
+misiones_definidas = []
 
-def listar_opciones(opciones):
+def mostrar_opciones(opciones):
     for i, opcion in enumerate(opciones, 1):
-        print(f"{i}. {opcion}")
+        print(f"{i:02d}. {opcion}")
 
-def seleccionar_opcion(opciones, max_seleccion=1, permitir_repetidos=True):
-    seleccionados = []
-    while len(seleccionados) < max_seleccion:
-        listar_opciones(opciones)
-        seleccion = input(f"Seleccione una opción (1-{len(opciones)}), o presione Enter para terminar: ")
-        if seleccion == "":
-            break
+def elegir_opcion(opciones, max_seleccion=1, permitir_repetidos=True):
+    opciones_elegidas = []
+    while len(opciones_elegidas) < max_seleccion:
+        mostrar_opciones(opciones)
+        seleccion = input(f"Introduzca el número de su elección (opciones desde el número 1 al número {len(opciones)}): ")
         if seleccion.isdigit() and 1 <= int(seleccion) <= len(opciones):
-            opcion_seleccionada = opciones[int(seleccion) - 1]
-            if not permitir_repetidos and opcion_seleccionada in seleccionados:
-                print("Esa opción ya ha sido seleccionada. Por favor, elija otra.")
+            opcion_elegida = opciones[int(seleccion) - 1]
+            if not permitir_repetidos and opcion_elegida in opciones_elegidas:
+                print("Esta opción ya fue seleccionada. Por favor, elija una diferente.")
             else:
-                seleccionados.append(opcion_seleccionada)
+                opciones_elegidas.append(opcion_elegida)
         else:
-            print("Selección no válida. Por favor, intente de nuevo.")
-    return seleccionados
+            print("Entrada no válida. Por favor, intente nuevamente.")
+    return opciones_elegidas
 
-def construir_mision():
-    if len(misiones) >= 5:
-        print("No se pueden definir más de 5 misiones.")
+def guardar_misiones_en_archivo():
+    if not misiones_definidas:
+        print("No hay misiones para guardar.")
         return
 
-    mision = {}
-    
-    mision["nombre"] = input("Nombre de la misión: ")
+    with open("misiones.txt", "w") as file:
+        for mision in misiones_definidas:
+            mision["armas"] = ','.join(mision["armas"])
+            mision["integrantes"] = ','.join(mision["integrantes"])
+            line = f'{mision["nombre"]}|{mision["planeta_destino"]}|{mision["nave"]}|{mision["armas"]}|{mision["integrantes"]}\n'
+            file.write(line)
+            mision["armas"] = mision["armas"].split(',')
+            mision["integrantes"] = mision["integrantes"].split(',')
 
-    print("Seleccione el planeta destino:")
-    planetas = [planet.nombre for planet in Planeta.lista_planetas]
-    mision["planeta_destino"] = seleccionar_opcion(planetas, max_seleccion=1)[0]
+    print("Las misiones se han guardado correctamente.")
 
-    print("Seleccione la nave a utilizar:")
-    naves = [nave.nombre for nave in Nave.lista_naves]
-    mision["nave"] = seleccionar_opcion(naves, max_seleccion=1)[0]
+def cargar_misiones_desde_archivo():
+    try:
+        global misiones_definidas
+        misiones_definidas = []
 
-    print("Seleccione hasta 7 armas:")
-    mision["armas"] = seleccionar_opcion(armas_disponibles, max_seleccion=7)
+        with open("misiones.txt", "r") as file:
+            for line in file:
+                nombre, planeta_destino, nave, armas, integrantes = line.strip().split('|')
+                mision = {
+                    "nombre": nombre,
+                    "planeta_destino": planeta_destino,
+                    "nave": nave,
+                    "armas": armas.split(','),
+                    "integrantes": integrantes.split(',')
+                }
+                misiones_definidas.append(mision)
 
-    print("Seleccione hasta 7 integrantes:")
-    integrantes = [personaje.nombre for personaje in Personaje.lista_personajes]
-    mision["integrantes"] = seleccionar_opcion(integrantes, max_seleccion=7, permitir_repetidos=False)
+        print("Las misiones se han cargado correctamente.")
+    except FileNotFoundError:
+        print("No se encontró el archivo misiones.txt. Asegúrese de haber guardado misiones previamente.")
 
-    misiones.append(mision)
-    print(f"Misión '{mision['nombre']}' construida exitosamente.")
-
-def modificar_mision():
-    if not misiones:
-        print("No hay misiones definidas.")
+def crear_nueva_mision():
+    if len(misiones_definidas) >= 5:
+        print("Se alcanzó el máximo de 5 misiones permitidas.")
         return
 
-    print("Misiones definidas:")
-    listar_opciones([mision['nombre'] for mision in misiones])
+    nueva_mision = {}
     
-    seleccion = input(f"Seleccione una misión para modificar (1-{len(misiones)}): ")
-    if not seleccion.isdigit() or not 1 <= int(seleccion) <= len(misiones):
-        print("Selección no válida.")
+    nueva_mision["nombre"] = input("Introduzca el nombre de la misión: ")
+
+    print("Elija el planeta de destino:")
+    planetas_disponibles = [planet.nombre for planet in Planeta.lista_planetas]
+    nueva_mision["planeta_destino"] = elegir_opcion(planetas_disponibles, max_seleccion=1)[0]
+
+    print("Seleccione la nave que se utilizará:")
+    naves_disponibles = [nave.nombre for nave in Nave.lista_naves]
+    nueva_mision["nave"] = elegir_opcion(naves_disponibles, max_seleccion=1)[0]
+
+    print("Elija hasta 7 armas:")
+    armas_disponibles = [arma.nombre for arma in Arma.lista_armas]
+    nueva_mision["armas"] = elegir_opcion(armas_disponibles, max_seleccion=7)
+
+    print("Elija hasta 7 miembros del equipo:")
+    integrantes_disponibles = [personaje.nombre for personaje in Personaje.lista_personajes]
+    nueva_mision["integrantes"] = elegir_opcion(integrantes_disponibles, max_seleccion=7, permitir_repetidos=False)
+
+    misiones_definidas.append(nueva_mision)
+    print(f"La misión '{nueva_mision['nombre']}' ha sido creada exitosamente.")
+
+def modificar_mision_existente():
+    if not misiones_definidas:
+        print("No existen misiones para modificar.")
+        return
+
+    print("Lista de misiones disponibles:")
+    mostrar_opciones([mision['nombre'] for mision in misiones_definidas])
+    
+    seleccion = input(f"Seleccione una misión para editar (opciones desde el número 1 al número {len(misiones_definidas)}): ")
+    if not seleccion.isdigit() or not 1 <= int(seleccion) <= len(misiones_definidas):
+        print("Selección incorrecta.")
         return
 
     mision_index = int(seleccion) - 1
-    mision = misiones[mision_index]
+    mision = misiones_definidas[mision_index]
 
-    print(f"Modificando misión '{mision['nombre']}'")
+    print(f"Editando la misión '{mision['nombre']}'")
 
     while True:
-        print("\nSeleccione qué desea modificar:")
+        print("\n¿Qué desea modificar?")
         print("1. Armas")
-        print("2. Integrantes")
-        print("3. Regresar")
+        print("2. Miembros del equipo")
+        print("3. Volver al menú anterior")
 
         opcion = input(">>>> ")
         
         if opcion == "1":
-            print("Seleccione las armas:")
-            nuevas_armas = seleccionar_opcion(armas_disponibles, max_seleccion=7)
+            print("Elija las nuevas armas:")
+            armas_disponibles = [arma.nombre for arma in Arma.lista_armas]
+            nuevas_armas = elegir_opcion(armas_disponibles, max_seleccion=7)
             mision["armas"] = nuevas_armas
             print(f"Armas actualizadas: {mision['armas']}")
         elif opcion == "2":
-            print("Seleccione los integrantes:")
-            nuevos_integrantes = seleccionar_opcion([personaje.nombre for personaje in Personaje.lista_personajes], max_seleccion=7, permitir_repetidos=False)
+            print("Elija los nuevos miembros del equipo:")
+            nuevos_integrantes = elegir_opcion([personaje.nombre for personaje in Personaje.lista_personajes], max_seleccion=7, permitir_repetidos=False)
             mision["integrantes"] = nuevos_integrantes
-            print(f"Integrantes actualizados: {mision['integrantes']}")
+            print(f"Miembros del equipo actualizados: {mision['integrantes']}")
         elif opcion == "3":
             break
         else:
-            print("Selección no válida. Por favor, intente de nuevo.")
+            print("Opción no válida. Intente nuevamente.")
 
-    print(f"Misión '{mision['nombre']}' modificada exitosamente.")
+    print(f"Los cambios en la misión '{mision['nombre']}' se han guardado correctamente.")
 
-def visualizar_mision():
-    if not misiones:
-        print("No hay misiones definidas.")
+def ver_detalles_mision():
+    if not misiones_definidas:
+        print("No hay misiones disponibles para mostrar.")
         return
 
-    print("Misiones definidas:")
-    listar_opciones([mision['nombre'] for mision in misiones])
+    print("Lista de misiones disponibles:")
+    mostrar_opciones([mision['nombre'] for mision in misiones_definidas])
     
-    seleccion = input(f"Seleccione una misión para visualizar (1-{len(misiones)}): ")
-    if not seleccion.isdigit() or not 1 <= int(seleccion) <= len(misiones):
-        print("Selección no válida.")
+    seleccion = input(f"Seleccione una misión para ver sus detalles (opciones desde el número 1 al número {len(misiones_definidas)}): ")
+    if not seleccion.isdigit() or not 1 <= int(seleccion) <= len(misiones_definidas):
+        print("Selección incorrecta.")
         return
 
     mision_index = int(seleccion) - 1
-    mision = misiones[mision_index]
+    mision = misiones_definidas[mision_index]
 
     print(f"\nDetalles de la misión '{mision['nombre']}':")
     print(f"Planeta destino: {mision['planeta_destino']}")
-    print(f"Nave a utilizar: {mision['nave']}")
+    print(f"Nave utilizada: {mision['nave']}")
     print(f"Armas: {', '.join(mision['armas'])}")
-    print(f"Integrantes: {', '.join(mision['integrantes'])}")
-
-def guardar_misiones():
-    if not misiones:
-        print("No hay misiones definidas para guardar.")
-        return
-
-    for mision in misiones:
-        mision["armas"] = ','.join(mision["armas"])
-        mision["integrantes"] = ','.join(mision["integrantes"])
-
-    df = pd.DataFrame(misiones)
-    df.to_csv("misiones.csv", index=False)
-    print("Misiones guardadas exitosamente.")
-
-    for mision in misiones:
-        mision["armas"] = mision["armas"].split(',')
-        mision["integrantes"] = mision["integrantes"].split(',')
-
-def cargar_misiones():
-    try:
-        df = pd.read_csv("misiones.csv")
-        global misiones
-        misiones = df.to_dict(orient="records")
-        
-        for mision in misiones:
-            mision["armas"] = mision["armas"].split(',')
-            mision["integrantes"] = mision["integrantes"].split(',')
-        
-        print("Misiones cargadas exitosamente.")
-    except FileNotFoundError:
-        print("No se encontró el archivo misiones.csv. Asegúrese de haber guardado misiones previamente.")
+    print(f"Miembros del equipo: {', '.join(mision['integrantes'])}")
