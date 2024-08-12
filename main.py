@@ -7,6 +7,8 @@ from vehiculo import cargar_vehiculos, Vehiculo
 from especie import cargar_especies, Especie
 from estadisticas import grafico_personajes_por_planeta, grafico_caracteristicas_naves, estadisticas_naves
 from listados import listar_peliculas, listar_especies, listar_planetas, buscar_personaje
+from misiones import construir_mision, modificar_mision, visualizar_mision, guardar_misiones, cargar_misiones
+import json
 
 def menu_principal():
     while True:
@@ -107,6 +109,37 @@ def menu_estadisticas():
         elif seleccion == "3":
             estadisticas_naves()
         elif seleccion == "4":
+            break
+        else:
+            print("ERROR - Seleccion invalida, por favor intente de nuevo")
+
+def menu_misiones():
+    cargar_armas_desde_csv()
+    cargar_naves_desde_csv()
+    cargar_planetas_desde_csv()
+    cargar_personajes_desde_csv()
+    while True:
+        print("\nSeleccione una opción del menú de misiones:")
+        print("1. Crear una misión")
+        print("2. Modificar una misión")
+        print("3. Ver misiones")
+        print("4. Guardar misiones en csv")
+        print("5. Cargar misiones desde csv")
+        print("6. Volver al menú principal")
+        
+        seleccion = input("-----> ")
+
+        if seleccion == "1":
+            construir_mision()
+        elif seleccion == "2":
+            modificar_mision()
+        elif seleccion == "3":
+            visualizar_mision()
+        elif seleccion == "4":
+            guardar_misiones()
+        elif seleccion == "5":
+            cargar_misiones()
+        elif seleccion == "6":
             break
         else:
             print("ERROR - Seleccion invalida, por favor intente de nuevo")
