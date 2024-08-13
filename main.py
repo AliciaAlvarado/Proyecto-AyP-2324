@@ -48,21 +48,6 @@ def menu_listados():
     cargar_especies()
     print('Especies cargadas del api')
 
-    ###########################################################################
-    print(Pelicula.lista_peliculas[0].__repr__())
-    print('')
-    print(Personaje.lista_personajes[0].__repr__())
-    print('')
-    print(Nave.lista_naves[0].__repr__())
-    print('')
-    print(Vehiculo.lista_vehiculos[0].__repr__())
-    print('')
-    print(Especie.lista_especies[0].__repr__())
-    print('')
-    print(Planeta.lista_planetas[0].__repr__())
-
-
-    ###########################################################################
 
     while True:
         print("\nSeleccione que desea hacer:")
