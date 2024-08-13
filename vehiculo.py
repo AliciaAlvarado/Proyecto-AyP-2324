@@ -21,9 +21,6 @@ class Vehiculo:
         self.creado = creado
         self.editado = editado
 
-    def __repr__(self):
-        return f"Vehiculo(nombre={self.nombre}, modelo={self.modelo}, clase={self.clase}, fabricante={self.fabricante}, longitud={self.longitud}, costo={self.costo}, tripulacion={self.tripulacion}, pasajeros={self.pasajeros}, velocidad_maxima={self.velocidad_maxima}, capacidad_carga={self.capacidad_carga}, consumibles={self.consumibles}, peliculas={self.peliculas}, pilotos={self.pilotos}, url={self.url}, creado={self.creado}, editado={self.editado})"
-
 def cargar_nombres_de_urls(urls):
     nombres = []
     for url in urls:

@@ -27,23 +27,7 @@ class Personaje:
     def episodios(self):
         return self.peliculas
 
-    def __repr__(self):
-        return (f"Nombre: {self.nombre}\n"
-                f"Nacimiento: {self.nacimiento}\n"
-                f"Color de ojos: {self.color_ojos}\n"
-                f"Género: {self.genero}\n"
-                f"Color de cabello: {self.color_cabello}\n"
-                f"Altura: {self.altura}\n"
-                f"Peso: {self.peso}\n"
-                f"Color de piel: {self.color_piel}\n"
-                f"Planeta de origen: {self.planeta_origen}\n"
-                f"Películas: {', '.join(self.peliculas)}\n"
-                f"Naves: {', '.join(self.naves)}\n"
-                f"Vehículos: {', '.join(self.vehiculos)}\n"
-                f"Especie: {self.especie}\n"
-                f"URL: {self.url}\n"
-                f"Creado: {self.creado}\n"
-                f"Editado: {self.editado}\n")
+    
 
 def cargar_nombres_de_urls(urls):
     nombres = []
@@ -113,13 +97,4 @@ def cargar_personajes_desde_csv():
             Personaje.lista_personajes.append(p)
     print('Personajes cargados exitosamente desde el csv')
 
-if __name__ == "__main__":
-    # Para cargar desde la API
-    # cargar_personajes()
-    
-    # Para cargar desde el CSV
-    cargar_personajes_desde_csv()
-    
-    # Imprimir personajes cargados
-    for personaje in Personaje.lista_personajes:
-        print(personaje)
+

@@ -121,14 +121,3 @@ def cargar_naves_desde_csv():
             Nave.lista_naves.append(n)
     
     print('Naves cargadas del CSV exitosamente')
-
-if __name__ == "__main__":
-    # Para cargar desde la API
-    # cargar_naves()
-    
-    # Para cargar desde el CSV
-    cargar_naves_desde_csv()
-    
-    # Imprimir naves cargadas
-    for nave in Nave.lista_naves:
-        print(nave)

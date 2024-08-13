@@ -19,8 +19,6 @@ class Pelicula:
         self.creado = creado
         self.editado = editado
 
-def __repr__(self):
-        return f"Pelicula(titulo={self.titulo}, episodio={self.episodio}, introduccion={self.introduccion}, director={self.director}, productor={self.productor}, fecha_lanzamiento={self.fecha_lanzamiento}, especies={self.especies}, naves={self.naves}, vehiculos={self.vehiculos}, personajes={self.personajes}, planetas={self.planetas}, url={self.url}, creado={self.creado}, editado={self.editado})"
 
 def cargar_nombres_de_urls(urls):
     nombres = []

@@ -21,19 +21,7 @@ class Planeta:
         self.residentes = []
         self.peliculas = []
 
-    def __repr__(self):
-        return (f"Nombre: {self.nombre}\n"
-                f"Clima: {self.clima}\n"
-                f"Diámetro: {self.diametro}\n"
-                f"Gravedad: {self.gravedad}\n"
-                f"Periodo Orbital: {self.periodo_orbital}\n"
-                f"Población: {self.poblacion}\n"
-                f"Periodo de Rotación: {self.periodo_rotacion}\n"
-                f"Terreno: {self.terreno}\n"
-                f"Agua Superficial: {self.agua_superficial}\n"
-                f"URL: {self.url}\n"
-                f"Creado: {self.creado}\n"
-                f"Editado: {self.editado}\n")
+
 
 def cargar_nombres_de_urls(urls):
     nombres = []
@@ -99,13 +87,4 @@ def cargar_planetas_desde_csv():
     
     print('Planetas cargados del CSV exitosamente')
 
-if __name__ == "__main__":
-    # Para cargar desde la API
-    # cargar_planetas()
-    
-    # Para cargar desde el CSV
-    cargar_planetas_desde_csv()
-    
-    # Imprimir planetas cargados
-    for planeta in Planeta.lista_planetas:
-        print(planeta)
+

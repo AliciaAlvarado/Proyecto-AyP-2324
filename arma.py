@@ -15,16 +15,7 @@ class Arma:
         self.descripcion = descripcion
         self.peliculas = peliculas
 
-    def __repr__(self):
-        return (f"ID: {self.id}\n"
-                f"Nombre: {self.nombre}\n"
-                f"Modelo: {self.modelo}\n"
-                f"Fabricante: {self.fabricante}\n"
-                f"Costo en Créditos: {self.costo_en_creditos}\n"
-                f"Longitud: {self.longitud}\n"
-                f"Tipo: {self.tipo}\n"
-                f"Descripción: {self.descripcion}\n"
-                f"Películas: {self.peliculas}\n")
+
 
 def cargar_armas_desde_csv():
     Arma.lista_armas = []
@@ -47,10 +38,3 @@ def cargar_armas_desde_csv():
     
     print('Armas cargadas del CSV exitosamente')
 
-if __name__ == "__main__":
-    # Para cargar desde el CSV
-    cargar_armas_desde_csv()
-    
-    # Imprimir armas cargadas
-    for arma in Arma.lista_armas:
-        print(arma)
