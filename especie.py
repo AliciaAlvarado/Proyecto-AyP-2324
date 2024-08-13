@@ -18,10 +18,10 @@ class Especie:
         self.url = url
         self.creado = creado
         self.editado = editado
-        self.peliculas = []
+        self.peliculas = None
 
     @property
-    def episodios(self):
+    def peliculas_relacionadas(self):
         return self.peliculas
 
     def __repr__(self):
@@ -36,6 +36,7 @@ class Especie:
                 f"Lengua: {self.lengua}\n"
                 f"Planeta de origen: {self.planeta_origen}\n"
                 f"Personajes: {', '.join(self.personajes)}\n"
+                f"Peliculas: {self.peliculas_relacionadas}"
                 f"Episodios: {', '.join(self.episodios)}\n"
                 f"URL: {self.url}\n"
                 f"Creado: {self.creado}\n"
@@ -60,20 +61,20 @@ def cargar_especies():
             detalles = detalles_respuesta.json()['result']['properties']
            
             e = Especie(
-                nombre=detalles['name'],
-                clasificacion=detalles['classification'],
-                designacion=detalles['designation'],
-                altura=detalles['average_height'],
-                esperanza_vida=detalles['average_lifespan'],
-                colores_ojos=detalles['eye_colors'],
-                colores_cabello=detalles['hair_colors'],
-                colores_piel=detalles['skin_colors'],
-                lengua=detalles['language'],
-                planeta_origen=detalles['homeworld'],
-                personajes=detalles['people'],
-                url=detalles['url'],
-                creado=detalles['created'],
-                editado=detalles['edited'],
+                nombre=detalles.get['name'],
+                clasificacion=detalles.get['classification'],
+                designacion=detalles.get['designation'],
+                altura=detalles.get['average_height'],
+                esperanza_vida=detalles.get['average_lifespan'],
+                colores_ojos=detalles.get['eye_colors'],
+                colores_cabello=detalles.get['hair_colors'],
+                colores_piel=detalles.get['skin_colors'],
+                lengua=detalles.get['language'],
+                planeta_origen=detalles.get['homeworld'],
+                personajes=detalles.get['people'],
+                url=detalles.get['url'],
+                creado=detalles.get['created'],
+                editado=detalles.get['edited']
                 peliculas = None
             )
             Especie.lista_especies.append(e)

@@ -21,7 +21,12 @@ def listar_especies():
         print(f"Altura: {especie.altura}")
         print(f"Clasificación: {especie.clasificacion}")
         
-        homeworld_name = next((planeta.nombre for planeta in Planeta.lista_planetas if planeta.url == especie.planeta_origen), "Unknown")
+        homeworld_name = "Unknown"
+        for planeta in Planeta.lista_planetas:
+            if planeta.url == especie.planeta_origen:
+                homeworld_name = planeta.nombre
+                break
+
         print(f"Planeta origen: {homeworld_name}")
         print(f"Lengua: {especie.lengua}")
         nombres_personajes = [persona.nombre for persona in Personaje.lista_personajes if persona.url in especie.personajes]
@@ -53,7 +58,12 @@ def buscar_personaje():
     for personaje in Personaje.lista_personajes:
         if cadena.lower() in personaje.nombre.lower():
             print(f"Nombre: {personaje.nombre}")
-            planeta_Origen = next((planeta.nombre for planeta in Planeta.lista_planetas if planeta.url == personaje.planeta_origen), "Unknown")
+            planeta_Origen = "Unknown"
+            for planeta in Planeta.lista_planetas:
+                if planeta.url == personaje.planeta_origen:
+                    planeta_Origen = planeta.nombre
+                    break
+
             print(f"Planeta de origen: {planeta_Origen}")
 
             peliculas = [f"{pelicula.titulo}, episode {pelicula.episodio}" for pelicula in Pelicula.lista_peliculas if personaje.url in pelicula.personajes]
@@ -61,7 +71,12 @@ def buscar_personaje():
 
             print(f"Género: {personaje.genero}")
 
-            nombre_especie = next((especie.nombre for especie in Especie.lista_especies if personaje.url in especie.personajes), "Unknown")
+            nombre_especie = "Unknown"
+            for especie in Especie.lista_especies:
+                if personaje.url in especie.personajes:
+                    nombre_especie = especie.nombre
+                break
+
             print(f"Species: {nombre_especie}")
 
             naves = [nave.nombre for nave in Nave.lista_naves if personaje.url in nave.pilotos]
